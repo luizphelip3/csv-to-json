@@ -32,9 +32,11 @@ for (let i = 1; i < line.length; i++){
     }
     result.push(obj)
 }
-
+// essa função altera a codificação resultado do csv a ser gerado pelo writefile
 let json = JSON.stringify(result)
 
+// writeFileSync gera um arquivo passando como parâmetro o caminho do novo arquivo
+// e o dado a ser gerado 
 fs.writeFileSync('./json/output.json',json)
 
-console.log(result);
+// console.log(result);
