@@ -11,7 +11,7 @@ function csvToJson(csvPath, jsonFiles){
     let result = []
 
     // criamos um array que recebe o dado do csv até a quebra de linha 
-    // (no caso define um array de  dados por linha)
+    // (no caso define um array de dados por linha)
     var line = csv.split("\n");
 
     // o primeiro indice do array contém todos os cabeçalhos das colunas, então a gente guarda
@@ -23,60 +23,55 @@ function csvToJson(csvPath, jsonFiles){
         // um objeto vazio que vai guardar todos os dados convertidos e definidos
         let obj = {}
 
-        // esse array passa pela linha atual e divide o dado quando percorrer ela
+        // esse array passa pela linha correspondente ao indice
+        // e guarda o dado até bater no split
         var currentData = line[i].split(",")
 
-        // esse laço percorre pelos headers e cria um objeto da com o conteúdo da linha,
-        // até percorrer por todos os headers
+        // esse laço percorre pelo dado de linha (nome ou stack) e cria 
+        //um objeto com o dado corrspondente da linha, até percorrer por todos os dados
         for(var j=0; j<lineData.length; j++){
             obj[lineData[j]] = currentData[j]
         }
+
     result.push(obj)
 }
     // essa função altera a codificação resultado do csv a ser gerado pelo writefile
     let json = JSON.stringify(result)
 
-    // const isJsonPopulated = fs.readdirSync(jsonFiles)
-    // if(isJsonPopulated){
-    //     fs.unlinkSync(jsonFiles)
-    // }
-
     // writeFileSync gera um arquivo passando como parâmetro o caminho do novo arquivo
     // e também o resultado do arquivo convertido
     fs.writeFileSync(jsonFiles,json)
-
-    // esse log exibe todos os arrays dos arquivos convertidos
-    // console.log(result);
-    return result
+    return result;
 }
 
-// essa função verifica se existem arquivos na todos os arquivos da pasta csv
+// essa função lê os arquivos na pasta de csv
 function csvDirectoryFiles(csvPath) {
     // console.log('csv Path => ', csvPath)
     let csvFiles = fs.readdirSync(csvPath)
     return csvFiles
   }
   
-  // criei uma constante que executa a função que lê todos os arquivos de uma pasta
-  // passando como parâmetro o caminho da pasta
+  // essa constante executa a função que lê os arquivos do diretório e guarda nela os dados
   const directory = csvDirectoryFiles('./csv')
   
-  // essa função converte todos os arquivos de dentro do diretório
-  // e cria um arquivo json pra cada arquivo csv lido
+  // essa função executa o método de conversão de csv e 
+  // cria os novos arquivos com base nos arquivos originários
   function convertCsvToJson(jsonDirectory) {
     // o método .map vai buscar e setar dentro da pasta de diretório csv
     // os arquivos utilizados  e vai buscar os nomes dos arquivos para
     // usá-los para nomear os novos arquivos
 
-   const allConverted = jsonDirectory.map((archive) =>
+   const allConvertedFiles = jsonDirectory.map((archive) =>
       csvToJson(`./csv/${archive}`, 
       `./json/${archive.split('.')[0]}.json`)
     )
 
     // esse log retorna pro usuário os arquivos convertidos, para retornar
-    // um arquivo específico é só inserir um dado no ;indice 
-    console.log(allConverted[0])
+    // um arquivo específico é basta definir um endereço no indice, 
+    // já que o retorno são vários arrays
+    console.log(allConvertedFiles)
   }
   
-  // executa a função que converte
+  // executa a função que converte csv pra json passando como parâmetro o diretório
+  // de csv
   convertCsvToJson(directory)
